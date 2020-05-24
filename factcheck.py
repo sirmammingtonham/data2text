@@ -8,6 +8,9 @@ data_ct = 0
 newline_ct = 0
 err_list = [0] * 727
 
+score_list = []
+score_gen_list = []
+
 cat_list = []
 
 def search_player(name, index):
@@ -33,7 +36,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 		# Debug
 		# if ct == 500:
 		# 	break
-		# if data_ct == 20:
+		# if data_ct == 5:
 		# 	break
 
 		# print(line.split('|'))
@@ -43,6 +46,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 			line = line[:-1]
 			line_list = line.split('|')
 			# print(line_list)
+
+			score_gen_list.append(line_list[1])
 
 			# Convert worded nums to digits
 			if line_list[1] == 'one':
@@ -77,6 +82,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-FG_PCT']
@@ -86,6 +93,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-FG_PCT']
 
@@ -94,6 +103,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-FG3_PCT':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -101,6 +112,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-FG3_PCT']
@@ -110,6 +123,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-FG3_PCT']
 
@@ -118,6 +133,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-TOV':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -125,6 +142,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-TOV']
@@ -134,6 +153,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-TOV']
 
@@ -142,6 +163,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-WINS':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -149,6 +172,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-WINS']
@@ -158,6 +183,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-WINS']
 
@@ -166,6 +193,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-LOSSES':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -173,6 +202,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-LOSSES']
@@ -182,6 +213,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-LOSSES']
 
@@ -190,6 +223,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-PTS':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -197,6 +232,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-PTS']
@@ -206,6 +243,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-PTS']
 
@@ -214,6 +253,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-PTS_QTR1':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -221,6 +262,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-PTS_QTR1']
@@ -230,6 +273,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-PTS_QTR1']
 
@@ -238,6 +283,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-REB':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -245,6 +292,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-REB']
@@ -254,6 +303,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-REB']
 
@@ -262,6 +313,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-FT_PCT':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -269,6 +322,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-FT_PCT']
@@ -278,6 +333,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-FT_PCT']
 
@@ -286,6 +343,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-PTS_QTR4':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -293,6 +352,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-PTS_QTR4']
@@ -302,6 +363,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-PTS_QTR4']
 
@@ -310,6 +373,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'TEAM-AST':
 				team_type = search_team(line_list[0], data_ct)
 
@@ -317,6 +382,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					if team_type == 'home':
 						value = data[data_ct]['home_line']['TEAM-AST']
@@ -326,6 +393,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value, ' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 					elif team_type == 'vis':
 						value = data[data_ct]['vis_line']['TEAM-AST']
 
@@ -334,6 +403,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 							print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 							err_list[data_ct] += 1
 
+						score_list.append(value)
+
 			elif category == 'PLAYER-STL':
 				index = search_player(line_list[0], data_ct)
 
@@ -341,6 +412,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['STL'][index]
 
@@ -349,6 +422,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-MIN':
 				index = search_player(line_list[0], data_ct)
 
@@ -356,6 +431,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['MIN'][index]
 
@@ -364,6 +441,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-FGM':
 				index = search_player(line_list[0], data_ct)
 
@@ -371,6 +450,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FGM'][index]
 
@@ -379,6 +460,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-FG3M':
 				index = search_player(line_list[0], data_ct)
 
@@ -386,6 +469,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FG3M'][index]
 
@@ -394,6 +479,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-FGA':
 				index = search_player(line_list[0], data_ct)
 
@@ -401,6 +488,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FGA'][index]
 
@@ -408,6 +497,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('Index:', data_ct, line_list)
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
+
+					score_list.append(value)
 
 			elif category == 'PLAYER-FTA':
 				index = search_player(line_list[0], data_ct)
@@ -416,6 +507,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FTA'][index]
 
@@ -424,6 +517,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-FGA':
 				index = search_player(line_list[0], data_ct)
 
@@ -431,6 +526,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FGA'][index]
 
@@ -439,6 +536,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-FTM':
 				index = search_player(line_list[0], data_ct)
 
@@ -446,6 +545,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FTM'][index]
 
@@ -454,6 +555,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-PTS':
 				index = search_player(line_list[0], data_ct)
 
@@ -461,6 +564,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['PTS'][index]
 
@@ -469,6 +574,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-BLK':
 				index = search_player(line_list[0], data_ct)
 
@@ -476,6 +583,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['BLK'][index]
 
@@ -484,6 +593,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-FG3_PCT':
 				index = search_player(line_list[0], data_ct)
 
@@ -491,6 +602,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FG3_PCT'][index]
 
@@ -499,6 +612,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-FG3A':
 				index = search_player(line_list[0], data_ct)
 
@@ -506,6 +621,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['FG3A'][index]
 
@@ -514,6 +631,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-TO':
 				index = search_player(line_list[0], data_ct)
 
@@ -521,6 +640,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['TO'][index]
 
@@ -529,6 +650,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-OREB':
 				index = search_player(line_list[0], data_ct)
 
@@ -536,6 +659,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['OREB'][index]
 
@@ -544,6 +669,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-REB':
 				index = search_player(line_list[0], data_ct)
 
@@ -551,6 +678,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['REB'][index]
 
@@ -559,6 +688,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-PF':
 				index = search_player(line_list[0], data_ct)
 
@@ -566,6 +697,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['PF'][index]
 
@@ -574,6 +707,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
 
+					score_list.append(value)
+
 			elif category == 'PLAYER-AST':
 				index = search_player(line_list[0], data_ct)
 
@@ -581,6 +716,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
 					err_list[data_ct] += 1
+
+					score_list.append(line_list[1])
 				else:
 					value = data[data_ct]['box_score']['AST'][index]
 
@@ -588,6 +725,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 						print('Index:', data_ct, line_list)
 						print('\tERROR: Values do not match ', value,' vs ', line_list[1])
 						err_list[data_ct] += 1
+
+					score_list.append(value)
 
 			else:
 				print('Index:', data_ct, line_list)
@@ -614,3 +753,36 @@ for count in err_list:
 print(err_sum/len(err_list))
 
 print(cat_list)
+
+print(len(score_list))
+print(len(score_gen_list))
+print(score_list[:20])
+print(score_gen_list[:20])
+
+out_text = []
+
+with open('bart_valid.txt', 'r') as f:
+	for paragraph in f:
+		new_p = ''
+		for sentence in paragraph.split('.'):
+			for word in sentence.split(' '):
+				# print(list(word))
+				if word != '\n':
+					if word == score_gen_list[0]:
+						new_p += score_list[0]
+
+						score_gen_list.pop(0)
+						score_list.pop(0)
+					else:
+						new_p += word
+
+					new_p += ' '
+
+			new_p = new_p[:-1]
+			new_p += '.'
+
+		out_text.append(new_p)
+		# print(new_p)
+
+with open('bart_fixed_valid.txt', 'w') as f:
+    f.writelines("%s\n" % par for par in out_text)
