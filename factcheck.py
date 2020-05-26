@@ -8,10 +8,16 @@ data_ct = 0
 newline_ct = 0
 err_list = [0] * 727
 
+total_score_list = []
+total_score_gen_list = []
+total_name_list = []
 score_list = []
 score_gen_list = []
+name_list = []
 
 cat_list = []
+
+fake_ct = 0
 
 def search_player(name, index):
 	player_keys = list(data[index]['box_score']['PLAYER_NAME'])
@@ -48,6 +54,8 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 			# print(line_list)
 
 			score_gen_list.append(line_list[1])
+			name_list.append(line_list[0])
+
 
 			# Convert worded nums to digits
 			if line_list[1] == 'one':
@@ -81,6 +89,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -111,6 +120,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -141,6 +151,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -171,6 +182,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -201,6 +213,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -231,6 +244,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -261,6 +275,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -291,6 +306,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -321,6 +337,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -351,6 +368,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -381,6 +399,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if team_type == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Team ' + line_list[0] + ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -411,6 +430,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -430,6 +450,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -449,6 +470,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -468,6 +490,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -487,6 +510,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -506,6 +530,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -525,6 +550,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -544,6 +570,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -563,6 +590,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -582,6 +610,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -601,6 +630,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -620,6 +650,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -639,6 +670,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -658,6 +690,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -677,6 +710,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -696,6 +730,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -715,6 +750,7 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 				if index == 'NONE':
 					print('Index:', data_ct, line_list)
 					print('\tERROR: Player ', line_list[0], ' not in match.')
+					fake_ct += 1
 					err_list[data_ct] += 1
 
 					score_list.append(line_list[1])
@@ -741,48 +777,72 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 		elif line == '\n':
 			newline_ct += 1
 
+			total_score_list.append(score_list)
+			total_score_gen_list.append(score_gen_list)
+			total_name_list.append(name_list)
+
+			score_list = []
+			score_gen_list = []
+			name_list = []
+
+
 		ct += 1
 
-print(err_list)
-print(len(err_list))
-print(data_ct + 1)
+total_score_list.append(score_list)
+total_score_gen_list.append(score_gen_list)
+total_name_list.append(name_list)
+
+# print(err_list)
+# print(len(err_list))
+# print(data_ct + 1)
 
 err_sum = 0
 for count in err_list:
 	err_sum += count
-print(err_sum/len(err_list))
+# print(err_sum/len(err_list))
 
-print(cat_list)
+# print(cat_list)
 
-print(len(score_list))
-print(len(score_gen_list))
-print(score_list[:20])
-print(score_gen_list[:20])
-
+assert len(total_score_list) == len(total_score_gen_list) == len(total_name_list)
+# print(total_score_list)
+# print(total_score_gen_list)
+# print(total_name_list)
 out_text = []
+ct = 0
 
 with open('bart_valid.txt', 'r') as f:
 	for paragraph in f:
-		new_p = ''
-		for sentence in paragraph.split('.'):
-			for word in sentence.split(' '):
-				# print(list(word))
-				if word != '\n':
-					if word == score_gen_list[0]:
-						new_p += score_list[0]
+		
+		# if ct == 1:
+		# 	break
 
-						score_gen_list.pop(0)
-						score_list.pop(0)
-					else:
-						new_p += word
+		out_paragraph = ''
 
-					new_p += ' '
+		# Make list of all sentences
+		sentences = paragraph.split('.')
+		sentences.pop(-1)
+		# print(len(total_score_list[ct]))
 
-			new_p = new_p[:-1]
-			new_p += '.'
+		while len(total_score_list[ct]) > 0:
+			# print(len(total_score_list[ct]), index)
+			for index in range(len(sentences)):
+				if total_name_list[ct][0] in sentences[index] and total_score_gen_list[ct][0] in sentences[index]:
+					sentences[index] = sentences[index].replace(total_score_gen_list[ct][0], total_score_list[ct][0])
 
-		out_text.append(new_p)
-		# print(new_p)
+			total_score_list[ct].pop(0)
+			total_score_gen_list[ct].pop(0)
+			total_name_list[ct].pop(0)
+
+
+		for sentence in sentences:
+			out_paragraph += sentence
+			out_paragraph += '.'
+
+		out_text.append(out_paragraph)
+
+		ct += 1
+		
+		# print(sentences)
 
 with open('bart_fixed_valid.txt', 'w') as f:
-    f.writelines("%s\n" % par for par in out_text)
+	f.writelines("%s\n" % par for par in out_text)
