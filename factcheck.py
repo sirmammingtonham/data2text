@@ -824,10 +824,15 @@ with open('bart_valid.txt', 'r') as f:
 		# print(len(total_score_list[ct]))
 
 		while len(total_score_list[ct]) > 0:
-			# print(len(total_score_list[ct]), index)
+			if ct == 1:
+				print(total_name_list[ct][0], total_score_gen_list[ct][0], total_score_list[ct][0])
 			for index in range(len(sentences)):
-				if total_name_list[ct][0] in sentences[index] and total_score_gen_list[ct][0] in sentences[index]:
-					sentences[index] = sentences[index].replace(total_score_gen_list[ct][0], total_score_list[ct][0])
+				# if ct == 1 and index == 0:
+				# 	print(sentences[1])
+
+				if total_name_list[ct][0] in sentences[index] and any(total_score_gen_list[ct][0] == w for w in sentences[index].split(' ')):
+					sentences[index] = sentences[index].replace(total_score_gen_list[ct][0], total_score_list[ct][0], 1)
+					break
 
 			total_score_list[ct].pop(0)
 			total_score_gen_list[ct].pop(0)
