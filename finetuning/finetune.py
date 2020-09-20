@@ -70,7 +70,7 @@ class SummarizationTrainer(BaseTransformer):
             input_ids, attention_mask=attention_mask, decoder_input_ids=decoder_input_ids, lm_labels=lm_labels,
         )
 
-    def _seqloss(self, output):
+    def _trigram_penalty(self, output):
         with torch.no_grad():
             penalty_factor = torch.tensor(1.0)
             penalty_factor += 1
@@ -79,11 +79,11 @@ class SummarizationTrainer(BaseTransformer):
             for i in range(0, len(probs)-2):
                 li = tuple(probs[i:i+2].tolist())
                 if li in self.freq_seq:
-                    if self.freq_seq[li] != probs[i+3]:
+                    if self.freq_seq[li] != probs[i+2]:
                         penalty_factor += 1
         #     print(probs)
         # print(penalty_factor)
-        return self.seq_loss_weight * torch.log(penalty_factor)
+        return torch.log(penalty_factor) if penalty_factor > 1 else torch.log(penalty_factor)*self.seq_loss_weight
 
     def _step(self, batch):
         pad_token_id = self.tokenizer.pad_token_id
@@ -99,7 +99,7 @@ class SummarizationTrainer(BaseTransformer):
         # print(penalty_factor)
         # print(loss.shape)
         # print(penalty_factor.shape)
-        loss += self._seqloss(outputs[1])
+        loss += self._trigram_penalty(outputs[1])
 
         print(loss)
 
@@ -196,7 +196,7 @@ class SummarizationTrainer(BaseTransformer):
         )
         parser.add_argument(
             "--max_target_length",
-            default=400,
+            default=600,
             type=int,
             help="The maximum total input sequence length after tokenization. Sequences longer "
             "than this will be truncated, sequences shorter will be padded.",
