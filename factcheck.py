@@ -1,4 +1,5 @@
 import json
+from num2words import num2words
 
 t = open('rotowire/valid.json')
 data = json.load(t)
@@ -14,6 +15,8 @@ total_name_list = []
 score_list = []
 score_gen_list = []
 name_list = []
+flag_worded = []
+total_flag_worded = []
 
 cat_list = []
 
@@ -36,7 +39,7 @@ def search_team(name, index):
 	else:
 		return 'NONE'
 		
-with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
+with open('roto_stage2_bart_valid_update-beam5_gens.h5-tuples.txt', 'r') as f:
 	ct = 0
 	for line in f:
 		# Debug
@@ -58,6 +61,11 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 
 
 			# Convert worded nums to digits
+			if not line_list[1].isdigit():
+				flag_worded.append(True)
+			else:
+				flag_worded.append(False)
+
 			if line_list[1] == 'one':
 				line_list[1] = '1'
 			elif line_list[1] == 'two':
@@ -781,9 +789,13 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 			total_score_gen_list.append(score_gen_list)
 			total_name_list.append(name_list)
 
+			total_flag_worded.append(flag_worded)
+
 			score_list = []
 			score_gen_list = []
 			name_list = []
+
+			flag_worded = []
 
 
 		ct += 1
@@ -791,6 +803,9 @@ with open('roto_stage2_bart-beam5_gens.h5-tuples.txt', 'r') as f:
 total_score_list.append(score_list)
 total_score_gen_list.append(score_gen_list)
 total_name_list.append(name_list)
+total_flag_worded.append(flag_worded)
+
+# print(len(total_flag_worded), len(total_score_gen_list))
 
 # print(err_list)
 # print(len(err_list))
@@ -803,14 +818,14 @@ for count in err_list:
 
 # print(cat_list)
 
-assert len(total_score_list) == len(total_score_gen_list) == len(total_name_list)
+# assert len(total_score_list) == len(total_score_gen_list) == len(total_name_list)
 # print(total_score_list)
 # print(total_score_gen_list)
 # print(total_name_list)
 out_text = []
 ct = 0
 
-with open('bart_valid.txt', 'r') as f:
+with open('bart_updated_valid.txt', 'r') as f:
 	for paragraph in f:
 		
 		# if ct == 1:
@@ -824,14 +839,24 @@ with open('bart_valid.txt', 'r') as f:
 		# print(len(total_score_list[ct]))
 
 		while len(total_score_list[ct]) > 0:
-			# print(len(total_score_list[ct]), index)
+			# if ct == 0:
+			# 	print(total_name_list[ct][0], total_score_gen_list[ct][0], total_score_list[ct][0])
 			for index in range(len(sentences)):
-				if total_name_list[ct][0] in sentences[index] and total_score_gen_list[ct][0] in sentences[index]:
-					sentences[index] = sentences[index].replace(total_score_gen_list[ct][0], total_score_list[ct][0])
+				if total_name_list[ct][0] in sentences[index] and any(total_score_gen_list[ct][0] == w for w in sentences[index].split(' ')):
+					if total_score_list[ct][0] == 'N/A':
+						total_score_list[ct][0] = '0'
+
+					if total_flag_worded[ct][0]:
+						sentences[index] = sentences[index].replace(total_score_gen_list[ct][0], num2words(total_score_list[ct][0]), 1)
+					else:
+						sentences[index] = sentences[index].replace(total_score_gen_list[ct][0], total_score_list[ct][0], 1)
+					break
 
 			total_score_list[ct].pop(0)
 			total_score_gen_list[ct].pop(0)
 			total_name_list[ct].pop(0)
+
+			total_flag_worded[ct].pop(0)
 
 
 		for sentence in sentences:
@@ -844,5 +869,5 @@ with open('bart_valid.txt', 'r') as f:
 		
 		# print(sentences)
 
-with open('bart_fixed_valid.txt', 'w') as f:
+with open('bart_valid_corrected.txt', 'w') as f:
 	f.writelines("%s\n" % par for par in out_text)
