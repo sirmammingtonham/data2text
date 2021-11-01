@@ -1,0 +1,3 @@
+[submodule "OpenNRE"]
+	path = OpenNRE
+	url = https://github.com/thunlp/OpenNRE.git
