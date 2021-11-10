@@ -250,18 +250,28 @@ def append_candidate_rels(entry, summ, all_ents, prons, players, teams, cities, 
             candrels.append((tokes, rels))
     return candrels
 
-def get_datasets(path):
-    with codecs.open(os.path.join(path, "train.json"), "r", "utf-8") as f:
+
+def get_datasets(path, summary_path=None):
+    with open(os.path.join(path, "train.json"), "r", encoding="utf-8") as f:
         trdata = json.load(f)
 
     all_ents, players, teams, cities = get_ents(trdata)
 
-    with codecs.open(os.path.join(path, "valid.json"), "r", "utf-8") as f:
+    with open(os.path.join(path, "valid.json"), "r", encoding="utf-8") as f:
         valdata = json.load(f)
 
-    with codecs.open(os.path.join(path, "valid.json"), "r", "utf-8") as f:
+    with open(os.path.join(path, "test.json"), "r", encoding="utf-8") as f:
         testdata = json.load(f)
-        
+
+    if summary_path is not None:
+        # with open(os.path.join(summary_path, "valid.txt"), "r", encoding="utf-8") as f:
+        #     for i, b in enumerate(f.readlines()):
+        #         valdata[i]['summary'] = word_tokenize(b)
+
+        with open(os.path.join(summary_path, "test.txt"), "r", encoding="utf-8") as f:
+            for i, b in enumerate(f.readlines()):
+                testdata[i]['summary'] = word_tokenize(b)
+
     extracted_stuff = []
     datasets = [trdata, valdata, testdata]
     for dataset in datasets:
@@ -278,21 +288,36 @@ def get_datasets(path):
     del cities
     return extracted_stuff
 
-def append_tuple_data(tup, multilabel=False):
+def append_tuple_data(tup, label_strat):
     """
     used for val, since we have contradictory labelings...
     tup is (sent, [rels]);
     each rel is ((ent_start, ent_end, ent_str), (num_start, num_end, num_str), label)
     """
-    if multilabel:
-        unique_rels = DefaultListOrderedDict()
-        for rel in tup[1]:
-            ent, num, label, idthing = rel
-            unique_rels[ent, num].append(label)
+
+    unique_rels = DefaultListOrderedDict()
+    for rel in tup[1]:
+        ent, num, label, idthing = rel
+        unique_rels[ent, num].append(label)
 
     dataset = []
 
-    if multilabel:
+    if label_strat is None:
+        for rel, label_list in unique_rels.items():
+            dataset.append({
+            "token": tup[0],
+            "h": {"name": rel[0][2], "pos": [rel[0][0], rel[0][1]]},
+            "t": {"name": rel[1][2], "pos": [rel[1][0], rel[1][1]]},
+        })
+    elif label_strat == 'single':
+        for rel, label_list in unique_rels.items():
+            dataset.append({
+            "token": tup[0],
+            "h": {"name": rel[0][2], "pos": [rel[0][0], rel[0][1]]},
+            "t": {"name": rel[1][2], "pos": [rel[1][0], rel[1][1]]},
+            "relation": label_list[0]
+        })
+    elif label_strat == 'multi':
         for rel, label_list in unique_rels.items():
             dataset.append({
             "token": tup[0],
@@ -308,28 +333,29 @@ def append_tuple_data(tup, multilabel=False):
                 "t": {"name": rel[1][2], "pos": [rel[1][0], rel[1][1]]},
                 "relation": rel[2]
             })
+
     return dataset
 
 # for full sentence IE training
-def save_full_sent_data(path="../data/rotowire", multilabel=False, remove=False, rename=True):
-    datasets = get_datasets(path)
+def save_ie_data(data_dir, out_dir, label_strat, rename, remove):
+    datasets = get_datasets(data_dir)
 
     max_trlen = max((len(tup[0]) for tup in datasets[0]))
     print("max tr sentence length:", max_trlen)
 
     train = []
     for tup in datasets[0]:
-        train.append(append_tuple_data(tup, multilabel))
+        train.append(append_tuple_data(tup, label_strat))
     print(len(train), "training examples")
 
     val = []
     for tup in datasets[1]:
-        val.append(append_tuple_data(tup, multilabel))
+        val.append(append_tuple_data(tup, label_strat))
     print(len(val), "validation examples")
 
     test = []
     for tup in datasets[2]:
-        test.append(append_tuple_data(tup, multilabel))
+        test.append(append_tuple_data(tup, label_strat))
     print(len(test), "test examples")
 
     train = [x for sublist in train for x in sublist]
@@ -355,18 +381,30 @@ def save_full_sent_data(path="../data/rotowire", multilabel=False, remove=False,
     labels = set([x['relation'] for x in train])
     rel2id = {label: count for count, label in enumerate(labels)}
 
-    with open('../data/ie/rotowire_rel2id.json', 'w+') as f:
+    with open(os.path.join(out_dir, 'rotowire_rel2id.json'), 'w+') as f:
 	    json.dump(rel2id, f)
 
-    with open('../data/ie/rotowire_train.txt', 'w+') as f:
+    with open(os.path.join(out_dir, 'rotowire_train.json'), 'w+') as f:
 	    f.writelines([json.dumps(x) + '\n' for x in train])
 
-    with open('../data/ie/rotowire_val.txt', 'w+') as f:
+    with open(os.path.join(out_dir, 'rotowire_val.json'), 'w+') as f:
 	    f.writelines([json.dumps(x) + '\n' for x in val])
 
-    with open('../data/ie/rotowire_test.txt', 'w+') as f:
+    with open(os.path.join(out_dir, 'rotowire_test.json'), 'w+') as f:
 	    f.writelines([json.dumps(x) + '\n' for x in test])
+
+def save_tuples_for_extraction(data_dir, summary_dir):
+    datasets = get_datasets(data_dir, summary_dir)
+
+    # val = [append_tuple_data(tup, None) for tup in datasets[1]]
+    val = None
+    test = [append_tuple_data(tup, None) for tup in datasets[2]]
+
+    # print(len(val), "validation examples")
+    print(len(test), "test examples")
+
+    return val, test
 
 
 if __name__ == '__main__': 
-    save_full_sent_data(multilabel=False, remove=True, rename=True)
+    save_ie_data(data_dir="../data/rotowire", out_dir="../data/ie", label_strat='single', rename=True, remove=False)
