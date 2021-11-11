@@ -235,9 +235,9 @@ def get_rels(entry, ents, nums, players, teams, cities):
                     rels.append((ent, numtup, "NONE", None)) # should i specialize the NONE labels too?
     return rels
 
-def append_candidate_rels(entry, summ, all_ents, prons, players, teams, cities, candrels):
+def append_candidate_rels(idx, entry, summ, all_ents, prons, players, teams, cities, candrels):
     """
-    appends tuples of form (sentence_tokens, [rels]) to candrels
+    appends tuples of form (summary_index, sentence_tokens, [rels]) to candrels
     """
     sents = sent_tokenize(summ)
     for j, sent in enumerate(sents):
@@ -247,7 +247,7 @@ def append_candidate_rels(entry, summ, all_ents, prons, players, teams, cities, 
         nums = extract_numbers(tokes)
         rels = get_rels(entry, ents, nums, players, teams, cities)
         if len(rels) > 0:
-            candrels.append((tokes, rels))
+            candrels.append((idx, j, tokes, rels))
     return candrels
 
 
@@ -278,7 +278,7 @@ def get_datasets(path, summary_path=None):
         nugz = []
         for i, entry in enumerate(dataset):
             summ = " ".join(entry['summary'])
-            append_candidate_rels(entry, summ, all_ents, prons, players, teams, cities, nugz)
+            append_candidate_rels(i, entry, summ, all_ents, prons, players, teams, cities, nugz)
 
         extracted_stuff.append(nugz)
 
@@ -291,12 +291,12 @@ def get_datasets(path, summary_path=None):
 def append_tuple_data(tup, label_strat):
     """
     used for val, since we have contradictory labelings...
-    tup is (sent, [rels]);
+    tup is (summary_idx, sentence_idx, sent, [rels]);
     each rel is ((ent_start, ent_end, ent_str), (num_start, num_end, num_str), label)
     """
 
     unique_rels = DefaultListOrderedDict()
-    for rel in tup[1]:
+    for rel in tup[3]:
         ent, num, label, idthing = rel
         unique_rels[ent, num].append(label)
 
@@ -305,14 +305,18 @@ def append_tuple_data(tup, label_strat):
     if label_strat is None:
         for rel, label_list in unique_rels.items():
             dataset.append({
-            "token": tup[0],
+            "summary": tup[0],
+            "sentence": tup[1],
+            "token": tup[2],
             "h": {"name": rel[0][2], "pos": [rel[0][0], rel[0][1]]},
             "t": {"name": rel[1][2], "pos": [rel[1][0], rel[1][1]]},
         })
     elif label_strat == 'single':
         for rel, label_list in unique_rels.items():
             dataset.append({
-            "token": tup[0],
+            "summary": tup[0],
+            "sentence": tup[1],
+            "token": tup[2],
             "h": {"name": rel[0][2], "pos": [rel[0][0], rel[0][1]]},
             "t": {"name": rel[1][2], "pos": [rel[1][0], rel[1][1]]},
             "relation": label_list[0]
@@ -320,15 +324,19 @@ def append_tuple_data(tup, label_strat):
     elif label_strat == 'multi':
         for rel, label_list in unique_rels.items():
             dataset.append({
-            "token": tup[0],
+            "summary": tup[0],
+            "sentence": tup[1],
+            "token": tup[2],
             "h": {"name": rel[0][2], "pos": [rel[0][0], rel[0][1]]},
             "t": {"name": rel[1][2], "pos": [rel[1][0], rel[1][1]]},
             "relation": label_list
         })
     else:
-        for rel in tup[1]:
+        for rel in tup[3]:
             dataset.append({
-                "token": tup[0],
+                "summary": tup[0],
+            "sentence": tup[1],
+                "token": tup[2],
                 "h": {"name": rel[0][2], "pos": [rel[0][0], rel[0][1]]},
                 "t": {"name": rel[1][2], "pos": [rel[1][0], rel[1][1]]},
                 "relation": rel[2]
@@ -393,17 +401,19 @@ def save_ie_data(data_dir, out_dir, label_strat, rename, remove):
     with open(os.path.join(out_dir, 'rotowire_test.json'), 'w+') as f:
 	    f.writelines([json.dumps(x) + '\n' for x in test])
 
-def save_tuples_for_extraction(data_dir, summary_dir):
+def get_dataset_for_extraction(data_dir, summary_dir):
     datasets = get_datasets(data_dir, summary_dir)
 
     # val = [append_tuple_data(tup, None) for tup in datasets[1]]
-    val = None
     test = [append_tuple_data(tup, None) for tup in datasets[2]]
+
+    # val = [x for sublist in val for x in sublist]
+    test = [x for sublist in test for x in sublist]
 
     # print(len(val), "validation examples")
     print(len(test), "test examples")
 
-    return val, test
+    return None, test
 
 
 if __name__ == '__main__': 

@@ -1,9 +1,9 @@
-import os, sys
+import os
 import json
 import torch
 from tqdm import tqdm
 import OpenNRE.opennre as opennre
-from create_ie_dataset import save_tuples_for_extraction
+from create_ie_dataset import get_dataset_for_extraction
 
 sentence_encoder = opennre.encoder.TransformerEntityEncoder(
 	max_length=128,
@@ -18,14 +18,14 @@ model.to(torch.device('cuda:0'))
 
 def extract(dataset):
 	for sentence in tqdm(dataset):
-		for relation in sentence:
-			relation['relation'] = model.infer(relation)[0]
+		sentence['relation'] = model.infer(sentence)[0]
 	return dataset
 
 if __name__ == '__main__':
-	model_name = sys.argv[1]
-	_, test = save_tuples_for_extraction(data_dir="../data/rotowire", summary_dir=f"../data/{model_name}")
-	extracted_tuples = extract(test)
+	for model_name in ('bart', 't5', 'pegasus'):
+		print(f'Extracting relations for {model_name}')
+		_, test = get_dataset_for_extraction(data_dir="../data/rotowire", summary_dir=f"../data/{model_name}")
+		extracted_relations = extract(test)
 
-	with open(os.path.join(f'../data/{model_name}', f'{model_name}_test_tuples.txt'), 'w+') as f:
-	    f.writelines([json.dumps(x) + '\n' for x in extracted_tuples])
+		with open(os.path.join(f'../data/{model_name}', f'{model_name}_test_relations.json'), 'w+') as f:
+			json.dump(extracted_relations, f)
