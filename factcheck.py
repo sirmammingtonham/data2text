@@ -2,13 +2,15 @@ import json, os
 from nltk import sent_tokenize, word_tokenize
 from tqdm import tqdm
 
-def factcheck(tuple_path = './gens/pegasus_test_relations.json', summary_path = './data/bart_ie/test_pegasus.txt'):
+def factcheck(model_name, dataset='test'):
+    relation_path = f'./gens/original/relations/{model_name}_{dataset}.json'
+    summary_path = f'./gens/original/{model_name}_{dataset}.txt'
 
-    with open(os.path.join("./data/rotowire", "test.json"), "r", encoding="utf-8") as f:
-        testdata = json.load(f)
+    with open(os.path.join('./data/rotowire', f'{dataset}.json'), 'r', encoding='utf-8') as f:
+        orig_data = json.load(f)
 
-    with open(tuple_path, 'r') as f:
-        data = json.loads(f.read())
+    with open(relation_path, 'r') as f:
+        relations = json.loads(f.read())
 
     with open(summary_path, 'r') as f:
         # have to word tokenize, join, then sent tokenize to avoid some small errors
@@ -16,10 +18,10 @@ def factcheck(tuple_path = './gens/pegasus_test_relations.json', summary_path = 
 
     total_fixed = 0
 
-    for relation in tqdm(data):
+    for relation in tqdm(relations):
         sum_idx = relation['summary']
         sent_idx = relation['sentence']
-        test_json = testdata[sum_idx]
+        test_json = orig_data[sum_idx]
 
         h_name = relation['h']['name']
         t = relation['t']['name']
@@ -52,8 +54,9 @@ def factcheck(tuple_path = './gens/pegasus_test_relations.json', summary_path = 
 
         output[sum_idx][sent_idx][t_pos] = correct
 
-    with open(f"./corrected_{summary_path.split('/')[-1]}", 'w+') as f:
+    with open(f'./gens/corrected/{model_name}_{dataset}.txt', 'w+') as f:
         f.write('\n'.join(' '.join(' '.join(sent) for sent in summary) for summary in output.values()))
 
 if __name__ == '__main__':
-    factcheck()
+    for model_name in ('bart', 't5', 'pegasus'):
+        factcheck(model_name)
