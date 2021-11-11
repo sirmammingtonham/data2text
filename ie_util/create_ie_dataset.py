@@ -264,11 +264,11 @@ def get_datasets(path, summary_path=None):
         testdata = json.load(f)
 
     if summary_path is not None:
-        # with open(os.path.join(summary_path, "valid.txt"), "r", encoding="utf-8") as f:
+        # with open(f"{summary_path}_val.txt, "r", encoding="utf-8") as f:
         #     for i, b in enumerate(f.readlines()):
         #         valdata[i]['summary'] = word_tokenize(b)
 
-        with open(os.path.join(summary_path, "test.txt"), "r", encoding="utf-8") as f:
+        with open(f"{summary_path}_test.txt", "r", encoding="utf-8") as f:
             for i, b in enumerate(f.readlines()):
                 testdata[i]['summary'] = word_tokenize(b)
 

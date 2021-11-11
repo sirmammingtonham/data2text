@@ -2,7 +2,7 @@ import json, os
 from nltk import sent_tokenize, word_tokenize
 from tqdm import tqdm
 
-def factcheck(tuple_path = './gens/pegasus_test_tuples.json', summary_path = './data/bart_ie/test_pegasus.txt'):
+def factcheck(tuple_path = './gens/pegasus_test_relations.json', summary_path = './data/bart_ie/test_pegasus.txt'):
 
     with open(os.path.join("./data/rotowire", "test.json"), "r", encoding="utf-8") as f:
         testdata = json.load(f)

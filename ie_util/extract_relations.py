@@ -24,8 +24,8 @@ def extract(dataset):
 if __name__ == '__main__':
 	for model_name in ('bart', 't5', 'pegasus'):
 		print(f'Extracting relations for {model_name}')
-		_, test = get_dataset_for_extraction(data_dir="../data/rotowire", summary_dir=f"../data/{model_name}")
+		_, test = get_dataset_for_extraction(data_dir="../data/rotowire", summary_dir=f"../gens/{model_name}")
 		extracted_relations = extract(test)
 
-		with open(os.path.join(f'../data/{model_name}', f'{model_name}_test_relations.json'), 'w+') as f:
+		with open(os.path.join(f'../gens/relations', f'{model_name}_test_relations.json'), 'w+') as f:
 			json.dump(extracted_relations, f)
