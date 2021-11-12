@@ -1,4 +1,5 @@
 data/*
+eval/onmt
 eval/ensemble
 eval/tuples
 
