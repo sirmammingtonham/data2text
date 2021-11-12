@@ -5,7 +5,6 @@ import torch
 from tqdm import tqdm
 
 from transformers import BartTokenizer, BartForConditionalGeneration
-from d2t_bart import BartForData2TextGeneration
 
 
 DEFAULT_DEVICE = "cuda" if torch.cuda.is_available() else "cpu"

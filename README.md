@@ -1,6 +1,9 @@
 # data2text
 
 ```
+conda create -f environment.yml
+conda activate data2text
+
 python create_dataset.py
 
 python finetune.py --data_dir ./dataset --output_dir ./ckpt
@@ -9,7 +12,7 @@ python generate.py --source_path dataset/test.source --model_name ./ckpt --outpu
 
 python create_ie_dataset.py
 
-python ie_util/OpenNRE/example/train_supervised_bert.py --train_file ./data/ie/rotowire_train.txt --val_file ./data/ie/rotowire_val.txt --test_file ./data/ie/rotowire_test.txt -rel2id_file ./data/ie/rotowire_rel2id.json
+python ie/OpenNRE/example/train_supervised_bert.py --train_file ./data/ie/rotowire_train.txt --val_file ./data/ie/rotowire_val.txt --test_file ./data/ie/rotowire_test.txt -rel2id_file ./data/ie/rotowire_rel2id.json
 
 python extract_relations.py
 

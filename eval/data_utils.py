@@ -1,5 +1,7 @@
+# pyright: reportMissingImports=false
+
 import sys
-sys.path.append('../ie_util')
+sys.path.append('../ie')
 
 import json, os
 from collections import Counter, defaultdict,OrderedDict

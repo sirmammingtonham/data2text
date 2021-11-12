@@ -1,5 +1,7 @@
+# pyright: reportMissingImports=false
+
 import sys
-sys.path.append('../ie_util')
+sys.path.append('../ie')
 
 from pyxdameraulevenshtein import normalized_damerau_levenshtein_distance
 from text2num import text2num

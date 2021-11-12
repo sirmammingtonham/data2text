@@ -1,3 +1,4 @@
+# pyright: reportMissingImports=false
 import argparse
 import logging
 import os
