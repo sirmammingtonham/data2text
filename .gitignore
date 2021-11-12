@@ -1,4 +1,6 @@
 data/*
+eval/ensemble
+eval/tuples
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

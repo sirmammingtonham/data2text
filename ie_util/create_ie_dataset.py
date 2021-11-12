@@ -1,7 +1,6 @@
-import codecs, json, os
-from collections import Counter, OrderedDict
+import json, os
+from collections import OrderedDict
 from nltk import sent_tokenize, word_tokenize
-import numpy as np
 import random
 from text2num import text2num, NumberException
 import json
