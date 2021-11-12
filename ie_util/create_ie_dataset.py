@@ -263,13 +263,14 @@ def get_datasets(path, summary_path=None):
         testdata = json.load(f)
 
     if summary_path is not None:
-        # with open(f"{summary_path}_val.txt, "r", encoding="utf-8") as f:
-        #     for i, b in enumerate(f.readlines()):
-        #         valdata[i]['summary'] = word_tokenize(b)
-
-        with open(f"{summary_path}_test.txt", "r", encoding="utf-8") as f:
-            for i, b in enumerate(f.readlines()):
-                testdata[i]['summary'] = word_tokenize(b)
+        if os.path.exists(f"{summary_path}_val.txt"):
+            with open(f"{summary_path}_val.txt", "r", encoding="utf-8") as f:
+                for i, b in enumerate(f.readlines()):
+                    valdata[i]['summary'] = word_tokenize(b)
+        if os.path.exists(f"{summary_path}_test.txt"):
+            with open(f"{summary_path}_test.txt", "r", encoding="utf-8") as f:
+                for i, b in enumerate(f.readlines()):
+                    testdata[i]['summary'] = word_tokenize(b)
 
     extracted_stuff = []
     datasets = [trdata, valdata, testdata]
@@ -403,16 +404,16 @@ def save_ie_data(data_dir, out_dir, label_strat, rename, remove):
 def get_dataset_for_extraction(data_dir, summary_dir):
     datasets = get_datasets(data_dir, summary_dir)
 
-    # val = [append_tuple_data(tup, None) for tup in datasets[1]]
+    val = [append_tuple_data(tup, None) for tup in datasets[1]]
     test = [append_tuple_data(tup, None) for tup in datasets[2]]
 
-    # val = [x for sublist in val for x in sublist]
+    val = [x for sublist in val for x in sublist]
     test = [x for sublist in test for x in sublist]
 
-    # print(len(val), "validation examples")
+    print(len(val), "validation examples")
     print(len(test), "test examples")
 
-    return None, test
+    return val, test
 
 
 if __name__ == '__main__': 

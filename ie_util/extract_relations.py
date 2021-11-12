@@ -24,8 +24,16 @@ def extract(dataset):
 if __name__ == '__main__':
 	for model_name in ('bart', 't5', 'pegasus'):
 		print(f'Extracting relations for {model_name}')
-		_, test = get_dataset_for_extraction(data_dir="../data/rotowire", summary_dir=f"../gens/original/{model_name}")
-		extracted_relations = extract(test)
+		val, test = get_dataset_for_extraction(data_dir="../data/rotowire", summary_dir=f"../gens/original/{model_name}")
 
-		with open(os.path.join(f'../gens/original/relations', f'{model_name}_test.json'), 'w+') as f:
-			json.dump(extracted_relations, f)
+		if os.path.exists(f"../gens/original/{model_name}_val.txt"):
+			extracted_relations = extract(val)
+
+			with open(os.path.join(f'../gens/original/relations', f'{model_name}_val.json'), 'w+') as f:
+				json.dump(extracted_relations, f)
+
+		if os.path.exists(f"../gens/original/{model_name}_test.txt"):
+			extracted_relations = extract(test)
+
+			with open(os.path.join(f'../gens/original/relations', f'{model_name}_test.json'), 'w+') as f:
+				json.dump(extracted_relations, f)
